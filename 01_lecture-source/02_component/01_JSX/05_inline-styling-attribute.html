@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- react 용 cdn -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        /* 
+        
+            카멜 케이스 
+            background-color <= 케밥 케이스
+            => backgroundColor <= 카멜 케이스
+        */
+
+        const style = {
+            backgroundColor : "black",
+            color : 'white',
+            cursor: 'pointer',
+            testAlight: 'center',
+            padding: '20px',
+        }
+        const element = 
+            <>
+                <h1 style={style}>hello World</h1>
+                <h3>inlinke style test</h3>
+            </>
+
+            ReactDOM.createRoot(document.getElementById('root')).render(element);
+
+    </script>
+</body>
+</html>
