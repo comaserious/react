@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- react 용 cdn -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- 
+      props 란?
+      properties 의 약자로, 컴포넌트에 속성을 설정할 때 사용하는 요소이다.
+      여기서 말하는 속성이란, 컴포넌트에 전달되는 데이터 or  함수를 의미한다
+      props  값은 해당 컴포넌트를 사용하는 부모 컴포넌트에서 설정할 수있다.
+      props 는 읽기 전용 객체이기 때문에 수정해서는 안된다.
+
+      리엑트 매우 유연학 사용 할 수 있지만, 한가지 엄격한 규칙이 있는데
+      "모든 리엑트 컴포넌트는 자신의 props 를 다룰 때 순수함수처럼 동작해야 한다."
+
+      입력값을 넘겼을때 동일한 결과를 반환하는 함수를 '순수함수라고 한다'
+      컴포넌트는 반드시 이러한 순수 함수처럼 작성되어야 한다.
+    -->
+
+
+
+    <script type="text/babel">
+
+        const [name1, name2] = ['너구리','코알라']
+
+        /*컴포넌트 호출시 props 에 우리가 작성한 데이터가 담겨있다 
+        여기서 props 의 prototype 은 Object 로 객체이다
+        즉 키와 밸류로 구성이 되어 있다.
+        해당 예제는 name 이 키값이 된다
+        */
+        function Title(props){
+          console.log(props)
+          return <h1>안녕하세요 {props.name}님 반갑습니다</h1>
+        }
+
+        Title.defaultProps ={
+          name : '기본 이름'
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render([
+          <Title name={name1}/>,
+          <Title name={name2}/>,
+          <Title name='푸바오'/>,
+          <Title/>,
+
+        ])
+    </script>
+</body>
+</html>

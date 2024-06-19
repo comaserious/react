@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- react 용 cdn -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /*
+            클래스형 컴포넌트
+            ES6 에서 제공되는 클래스 문법을 이용해서 랜더링이 될 컴포넌트를 정의하는
+            방법을 제공해준다.
+            render() 함수는 반드시 작성해야 하며, renturn 값을 랜더링이 될 
+            리엑트 엘리먼트를 정의한다.
+            JSX 만으로도 리액트 엘리먼트를 정의할 수 있지만, 클래스형 컴포넌트를
+            작성하게 되면 장점도 존재한다.
+            중복되는 엘리먼트들을 추상화해서 컴포넌트로 작성하고, 작성된 컴포넌트를
+            재사용하는 것이다.
+
+            컴포넌트를 만드는 방식은 두가지가 있다.
+            클래스형 컴포넌트, 함수형 컴포넌트
+            함수형 컴포넌트가 더 간결하고 선언하기도 편하며, 메모리 사용이 적다.
+
+            하지만 state() 상태관리 및 리액트의 life cycle 임의의 메소드 정의 등
+            클래스형 컴포넌트에서만 사용이 가능한 방식이 있기 때문이다.
+        */
+
+        class Title extends React.Component{
+            render() {
+                return(
+                    <h1>Class Component</h1>
+                );
+            }
+        }
+
+        /*
+        클래스형 컴포넌트를 만들게 되면, 사용자 정의의 컴포넌트를 마치 엘리먼트 형태로 사용할 수 있게 된다.
+        (사용자 정의의 태그처럼 사용할 수 있다)
+        */
+        ReactDOM.createRoot(document.getElementById('root')).render(<Title/>);
+        // 1. 앞글자는 대문자
+        // 2. 닫기 태그 존재
+        // 3. 클래스의 이름 또는 함수 이름과 동일해야 함
+    </script>
+</body>
+</html>

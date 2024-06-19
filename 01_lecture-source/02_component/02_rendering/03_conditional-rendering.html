@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- react 용 cdn -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <!-- 
+        조건부 렌더링
+        여러개의 엘리먼트 중 특정 조건에 따라서 하나의 엘리먼트만 렌더링 해보기!!
+    -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+
+        // prompt 는 문자열을 반환하기 때문에 파싱 작업이 필요하다
+        const answer = prompt('리엑트가 재밌지 않음? \n 1. yes \n 2.no')
+
+        /* 1. 랜더링시 조건 비교후 조건부 랜더링 하기*/
+        // const positiveElement = <h1>앞으로 더 어려울 예정입니다</h1>
+        // const negativeElement = <h1>버티세요</h1>
+
+        // root.render(
+        //     parseInt(answer) === 1 ? positiveElement:negativeElement
+        // )
+        /* 2. JSX 내에서 조건부로 엘리먼트 생성하기*/
+        /* 2-1 if 문으로 조건부 엘리먼트 생성하기*/
+        // let element;
+
+        // if(parseInt(answer)===1){
+        //     element = <h1>앞으로 더 어려울거다</h1>
+        // }else{
+        //     element= <h1>정진하세요</h1>
+        // }
+
+        /* 2-2. 삼항연산자로 조건부 엘리먼트 생성하기(const 를 사용할 수 있는 장점)*/
+
+        // const element = (parseInt(answer)===1)? <h1>앞으로 어려울지도 ?</h1> : <h1>괜찮습니다 정상입니다</h1>
+
+        /* 2-3 && 연산자를 이용한 조건부 엘리먼트 생성하기(조건이 맞을때만 엘리먼트가 보이게 할 경우)*/
+
+        let element = parseInt(answer) === 1 && <h1>어렵습니다</h1>
+        if(!element){
+            element = <h1>원래 그럼</h1>
+        }
+
+        root.render(element)
+    </script>
+</body>
+</html>
