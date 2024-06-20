@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <!-- todolist -->
+    <div id="root"></div>
+
+
+    <script type="text/babel">
+        
+        const {useState} = React;
+
+
+        function TodoList(){
+
+            // console.log(useState())
+            const [message,setMessage] = useState();
+            
+            return(
+                <>
+                    <input type="text" onChange={
+                        (e)=>{
+                            console.log(e.currentTarget.value)
+                            setMessage(e.currentTarget.value)
+                        }
+                    }/>
+                    
+                </>
+            )
+        }
+
+        // function MakeTodo(message){
+        //     return(
+        //         <>
+        //             <input type="checkbox"/>
+        //             <p>{message}</p>
+        //         </>
+        //     )
+        // }
+        ReactDOM.createRoot(document.getElementById('root')).render(<TodoList/>)
+    </script>
+</body>
+</html>

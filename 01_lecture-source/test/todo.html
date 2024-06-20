@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        class Todo extends React.Component{
+            state = {
+                todo : ''
+            }
+
+            render(){
+                return(
+                    <>
+                        <input type="text" onChange={(e)=>{
+                            const valid = e.currentTarget.value;
+                            console.log(valid)
+                            this.setState({todo: valid})
+                        }}/>
+                        <button onClick={
+                            ()=>doing(MakeTodo,this.state.todo)    
+                        }>todo 작성</button>
+                    </>
+                )
+            }
+        }
+
+        function MakeTodo(props){
+            return(
+                <>
+                    <input type="checkbox"/>
+                    <p>{props.message}</p>
+                </>
+            )
+        }
+
+        function doing (MakeTodo,message){
+            ReactDOM.render(<MakeTodo message={message}/>)
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<Todo/>)
+    </script>
+</body>
+</html>
