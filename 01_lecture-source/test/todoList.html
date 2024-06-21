@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root" style="display: flex; flex-direction: column; align-items: center;"></div>
+
+    <script type="text/babel">
+
+        const {useState} = React;
+
+        function Todo(){
+
+            const [todos,setTodos] = useState([
+                {id: 1 , todo: '오늘 할일', isDo: false}
+            ]);
+
+            const[nextId,setNextId] =useState(2);
+
+            const[inputText, setInputText] =useState('');
+
+            const onChangeHandler= e=>{
+                setInputText(e.target.value)
+            }
+
+            const onClickHandler = () =>{
+                const changedToto = todos.concat({
+                    id: nextId,
+                    todo : inputText
+                })
+                setTodos(changedToto)
+                setNextId(nextId+1)
+                setInputText('')
+            }
+            
+            const checkBoxHandler=(e, t)=>{
+                if(e.currentTarget.checked){
+                    t.isDo=true;
+                }else{
+                    t.isDo=false;
+                }
+            }
+            const removeTodo=id=>{
+                const changed = todos.filter(t=>t.id!==id);
+                setTodos(changed);
+            }
+
+            const makeTodo=t=>{
+                if(t.isDo){
+                    return <li key={t.id}><input type="checkbox" onChange={(e)=>checkBoxHandler(e,t)}/><s>{t.todo}</s> <button onClick={()=>removeTodo(t.id)}>삭제</button></li>
+                }else{
+                    return <li key={t.id}><input type="checkbox" onChange={(e)=>checkBoxHandler(e,t)}/>{t.todo} <button onClick={()=>removeTodo(t.id)}>삭제</button></li>
+                }
+            }
+            return(
+                <>  
+                    <h3>Todo-list</h3>
+                    <div style={{backgroundColor:'white',width:'40vw',height:'40vh', border: '1px solid black'}}>
+                        <ul style={{listStyleType : 'none'}}>
+                            {todos.map(t=>t.isDo? <li key={t.id}><input type="checkbox" onChange={(e)=>checkBoxHandler(e,t)}/><s>{t.todo}</s> <button onClick={()=>removeTodo(t.id)}>삭제</button></li>:
+                            <li key={t.id}><input type="checkbox" onChange={(e)=>checkBoxHandler(e,t)}/>{t.todo} <button onClick={()=>removeTodo(t.id)}>삭제</button></li>
+                        )}
+                        </ul>
+                    </div>
+                    <div>
+                        <input type="text" onChange={onChangeHandler} value={inputText}/> <button onClick={onClickHandler}>등록 하기</button>
+                    </div>
+                    
+                </>
+            )
+        }
+
+        function Header(){
+            return(
+                <h1 style={{width: '100vw',height: '10vh',backgroundColor:'black',color:'white'}}>오늘의 할일! {new Date().toLocaleDateString()}</h1>
+            )
+        }
+
+        const rendering = ReactDOM.createRoot(document.getElementById('root')).render([<Header/>,<Todo/>])
+        setInterval(Header(),1000)
+    </script>
+</body>
+</html>
