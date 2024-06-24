@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root= ReactDOM.createRoot(document.getElementById('root'))
+
+        const {useState,useEffect} =React;
+
+        
+
+        function Test(){
+            const start = new Date();
+
+            const [text,setText] =useState('');
+            const [inputText,setInputText]=useState('')
+
+            useEffect(() => {
+
+                console.log('useEffect')
+                const userText = prompt('문자열 입력');
+                setText(userText);
+            }, []);
+
+            const handleKeyPress= e=>{
+                if(e.key==='Enter'){
+                    
+                    if(text===inputText){
+                        const end = new Date();
+                        alert(`${end-start}(ms)`)
+                        setInputText('')
+                    }else{
+                        alert('잘못 입력했습니다')
+                        setInputText('')
+                    }
+                }
+            }
+
+            console.log('render');
+
+            return(
+                <>  
+                    <p>{text}</p>
+                    <input type="text" value={inputText} onChange={e=> setInputText(e.target.value)} onKeyPress={handleKeyPress}/>
+                    
+                </>
+                
+            )
+        }
+
+        root.render(<Test/>)
+    </script>
+</body>
+</html>

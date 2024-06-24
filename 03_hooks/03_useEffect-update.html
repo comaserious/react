@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+
+        <!-- 
+            마운트 시점 뿐 아니라, 특정한 값이 업데이트 될 때만 실행하게 해보자
+
+        -->
+    </div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        const{useState,useEffect} = React;
+
+        
+
+        function LoginForm(){
+            const [home, setHome] = useState({username: '',password:''});
+
+            const onChangeHandler= e=>{
+                const change = {...home, [e.target.name] : e.target.value}
+
+                setHome(change)
+            }
+
+            /*
+                useEffect 는 기본적으로 마운트 시점에서 동작하고, 또한 원하는 값으 변경 시점에만 동작하게 각각 만들 수 있다
+                그 뿐 아니라 변화 감지 대상에 변화가 없으면 쓸데 없이 동작하지 않는다
+            */
+
+            useEffect( ()=> {
+                console.log('username update 됨....')
+            },[home.username]) // 동작하기 전의 변경값과 변경후의 값을 비교해서 일치하면 동작(호출)을 건너 뛴다
+
+            useEffect( ()=> {
+                console.log('password update 됨....')
+            },[home.password])
+            return(
+                <>  
+                    
+                    <label >username : </label>
+                    <input type="text" name="username" value = {home.username}  onChange={onChangeHandler}/>
+                    <br/>
+                    <label>password : </label>
+                    <input type="password" name="password" value={home.password}  onChange={onChangeHandler}/>
+                    <br/>
+                    <h3>username : {home.username}</h3>
+                    <h3>password : {home.password}</h3>
+                </>
+            )
+        }
+
+        root.render(<LoginForm/>)
+    </script>
+</body>
+</html>

@@ -4,8 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
 </head>
 <body>
-    
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const {useState} = React;
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        function Header(){
+            return(
+                <h1>오늘의 할일 !! {new Date().toLocaleDateString()}</h1>
+            )
+        }
+
+        function TodoBox({todos,setTodos}){
+
+            const onCheckHandler=e=>{
+                
+                    console.log(e.target.checked)
+
+                    const changeTodo = todos.map(todo=>todo.id===parseInt(e.target.id)? {...todo, isDone:e.target.checked} : todo)
+                    
+                    console.table(changeTodo)
+                    setTodos(changeTodo)
+                
+            }
+
+            const removeTodo=id=>{
+                const changeTodo = todos.filter(todo=>todo.id !== id )
+
+                setTodos(changeTodo)
+            }
+            return(
+                <div>
+                    <ul>
+                        {todos.map(todo=>{
+                            return(
+                                <li key={todo.id}>
+                                    <p>
+                                        <input type="checkbox" onChange={onCheckHandler} id={todo.id}/>
+                                        <label style={{textDecoration: todo.isDone? 'line-through':'none'}}>
+                                            {todo.description}
+                                        </label>
+                                        <button onClick={()=>removeTodo(todo.id)}>삭제하기</button>
+                                    </p>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            )
+        }
+
+        
+        function Main(){
+
+            const [inputText,setInputText] = useState('');
+            const [todos,setTodos] = useState([{
+                id: 1,
+                description: '오늘 할일을 작성하세요',
+                isDone: false
+            }])
+
+            const [nextId,setNextId] = useState(2);
+
+            const onChangeHandler=e=>{
+                setInputText(e.target.value)
+            }
+            const onClickHandler=()=>{
+
+                const changeTodo = todos.concat({
+                    id: nextId,
+                    description : inputText,
+                    isDone: false
+                })
+
+                setNextId(nextId+1)
+                setTodos(changeTodo)
+
+                setInputText('')
+
+
+            }
+            return(
+                <div className='main'>
+                    <p>Todo-List</p>
+                    <TodoBox todos={todos} setTodos={setTodos}/>
+                    <input type="text" value={inputText} onChange={onChangeHandler}/> <button onClick={onClickHandler}>할일 추가</button>
+                </div>
+            )
+        }
+
+        function Footer(){
+            return(
+                <div>
+                    <p>CopyRight 2024.12.10</p>
+                </div>
+            )
+        }
+
+        function Container(){
+            return(
+                <>
+                    <Header/>
+                    <Main/>
+                    <Footer/>
+                </>
+            )
+        }
+
+        root.render(<Container/>)
+    </script>
 </body>
 </html>
