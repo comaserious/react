@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<style>
+    .green{
+        background-color : green;
+    }
+    .red{
+        background-color : red;
+    }
+</style>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const {useState} = React;
+
+        function Solution({sol}){
+            console.table(sol)
+            return(
+                <div className='solution'>
+                    <span className ={sol[0]?'green':'red'}>1</span><span className ={sol[1]?'green':'red'}>2</span><span className ={sol[2]?'green':'red'}>3</span><span className ={sol[3]?'green':'red'}>4</span><span className ={sol[4]?'green':'red'}>5</span>
+                </div>
+            )
+        }
+        function Question(){
+
+            const q = ['Q: Python에서는 문자열을 작은따옴표(\')나 큰따옴표(")로 감쌀 수 있다',
+            'Q: 원의 넓이는 반지름을 r, 원주율을 π라 할 때, πr^2로 계산된다.',
+        'Q: 물은 0도에서 얼고 100도에서 끓는다',
+    'Q: 세종대왕은 한글을 창제한 왕이다','Q: 지구의 가장 큰 대륙은 아프리카 대륙이다']
+
+            const a =['o','o','o','o','x']
+
+            
+            const[answer,setAnswer] =useState([]);
+            const [nextId,setNextId] = useState(0);
+            const[inputText,setInputText] = useState('');
+            const[count,setCount] =useState(0);
+            const answerHandler=e=>{
+                setInputText(e.target.value)
+            }
+
+            const submitHandler=()=>{
+                if(a[nextId]===inputText){
+                    const changeAnswer = answer.concat(true);
+                    setAnswer(changeAnswer)
+                    setCount(count+1)
+                }else{
+                    const changeAnswer = answer.concat(false)
+                    setAnswer(changeAnswer)
+                }
+
+                if(nextId===4){
+                    alert(`점수는 ${count} 입니다`)
+                    setNextId(0)
+                }
+                else{
+                    setNextId(nextId+1);
+                }
+
+                setInputText('')
+            }
+
+            return(
+                <>
+                <Solution sol={answer}/>
+                <div>
+                    <p>{q[nextId]}</p>
+                    <br/>
+                    <input type="text" value = {inputText} onChange={answerHandler}/>
+                    <button onClick={submitHandler}>제출</button>
+                </div>
+                </>
+            )
+        }
+
+        root.render(<Question/>)
+
+    </script>
+</body>
+</html>
