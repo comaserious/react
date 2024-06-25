@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const {useState,useEffect} = React;
+
+        function Container(){
+            return(
+                <>
+                    <Header/>
+                    <Contents/>
+                    <Footer/>
+                </>
+            )
+        }
+
+        function Header(){
+            return(
+                <h1>Roulette</h1>
+            )
+        }
+
+        function Contents(){
+
+            const [games, setGames] = useState([]);
+            const [nextId,setNextId] =useState(0);
+            const [inputText,setInputText]=useState('')
+            const [isRoll,setIsRoll] = useState(false)
+
+            const onClickHandler=()=>{
+                const changeGame = games.concat({id: nextId,description : inputText, percent: 0})
+
+                setGames(changeGame)
+                setInputText('')
+                setNextId(nextId+1)
+            }
+            return(
+                <>
+                    <RandomBox games={games} setGames={setGames} isRoll={isRoll} setIsRoll={setIsRoll}/>
+                    <input type="text" value={inputText} onChange={e=>setInputText(e.target.value)}/> <button onClick={onClickHandler}>추가</button>
+                    <Rolling games={games} setGames={setGames} isRoll={isRoll}/>
+                </>
+            )
+        }
+
+        function Rolling({games,setGames,isRoll}){
+
+            const makeGame=()=>{
+
+                const range =[];
+                let start = 0;
+
+                games.forEach(game=>{
+                    range.concat({start: start, end: start + game.percent, description: game.description})
+                })
+
+                console.log(range)
+
+                console.log('오나')
+                const number = Math.random()*100
+
+                console.log(number)
+                const result = null
+
+                console.log('range',range)
+
+                range.forEach(r=>{
+
+
+                    if(number>=r.start && number< r.end) result = r.description
+                })
+
+                console.log(result)
+
+                return result
+            }
+
+            
+            return(
+                <>
+                    {isRoll && 
+                        
+                        <div style={{width: 300, height: 300}}>
+                            {()=>makeGame}
+                            <button>돌리기</button>
+                        </div>
+                        
+
+                    }
+                </>
+            )
+        }
+
+        function Footer(){
+            return(
+                <div>돌려돌려 돌림판</div>
+            )
+        }
+
+        function RandomBox({games,setGames,isRoll,setIsRoll}){
+
+            const onChangeHandler=(e,id)=>{
+                const changeGame = games.map(game=>game.id===id? {...game,percent: parseInt(e.target.value)}:game)
+
+                setGames(changeGame)
+            }
+
+            const removeGame=id=>{
+                const changeGame = games.filter(game=>game.id!==id)
+                setGames(changeGame)
+            }
+
+            const rolling=()=>{
+                let amount = 0;
+                games.forEach(game=>{
+                    amount+=game.percent
+                })
+
+                if(amount!=100){
+                    alert('합계가 100% 가 아닙니다')
+                }else{
+                    setIsRoll(true)
+                }
+            }
+
+            return(
+                <div style={{width: 300, height: 300, border : 'solid 1px black'}}>
+                    <ul>
+                        {games.map(game=>{
+                            return(
+                                <li key={game.id}>
+                                    <p>{game.description}</p>
+                                    <input type="number" value ={game.percent} onChange={e=>onChangeHandler(e,game.id)}/>
+                                    <button onClick={()=>removeGame(game.id)}> 삭제하기 </button>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                    <button onClick={rolling}>roll</button>
+                </div>
+            )
+        }
+        ReactDOM.createRoot(document.getElementById('root')).render(<Container/>)
+    </script>
+</body>
+</html>
