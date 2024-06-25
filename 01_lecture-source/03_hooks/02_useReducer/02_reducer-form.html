@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /*
+            06_event
+            05_multiple-function-component-event-handling 비교해보면서 공부
+        */
+
+        const {useReducer} = React;
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        function reducer(state,action){
+            return {...state,[action.name]:action.value}
+        }
+
+
+        function RegistForm(){
+
+            
+
+            const[form,dispatch] =useReducer(reducer,{name: '', nick: ''})
+
+            
+
+            const onChangeHandler=e=>{
+                dispatch(e.target)
+            }
+
+            return(
+                <>
+                    <label>이름 : </label>
+                    <input type="text" name="name" onChange={onChangeHandler} autoComplete='off'/>
+                    <br/>
+                    <label>닉네임 : </label>
+                    <input type="text" name="nick"  onChange={onChangeHandler} autoComplete='off'/>
+                    <br/>
+                    <div>
+                        <h3>입력한 이름 : {form.name}</h3>
+                        <h3>입력한 닉네임 : {form.nick}</h3>    
+                    </div>
+                </>
+            )
+        }
+
+        root.render(<RegistForm/>)
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        /*memorization : 메모리를 할당해서 미리 값을 기억한다*/
+        const {useState,useMemo} =React;
+
+        const hardCalculator=(num)=>{
+            console.log('요상한 계산기')
+
+            for(let i=0; i< 1000000000; i++){
+
+            }
+            return num+10000;
+        }
+
+        const easyCalculator=(num)=>{
+            console.log('정상적인 계산기')
+
+            return num+1;
+        }
+
+
+
+        function App(){
+
+    
+
+            const[hardNumber,setHardNumber] = useState(0);
+            const[easyNum,setEasyNum]=useState(0);
+            /*
+                쉬운 계산기를 돌릴때도, 어려운 계산기 때문에 랜더링 시 시간이 오래 소요가 된다.
+                그래서 우리는 어려운 계산기를 통해 나오는 연산값을 미리
+                메모리 상에 저장(캐싱) 해두고, 그값이 변경 되지 않을때는 
+                다시 랜더링이 되지 않게 만든다.
+            */
+            const hardSum = useMemo(()=>{
+                return hardCalculator(hardNumber)
+            },[hardNumber])  // [] 내에 hardNumber 값이 변경(update)이 일어났을때만 수행을 한다. useEffect 처럼 타겟을 설정하는 것이다.
+
+            const easySum = useMemo(()=>{
+                return easyCalculator(easyNum)
+            },[easyNum])
+
+            /*  
+                1==2 => 변화가 감지 되면 함수의 값을 재호출한다.
+                값을 확인하는 방법은 == 일치 연산을 확인한다.
+                => 근데 만약 객체가 비교할 값으로 들어 온다면?
+                == 일치 연산은 주소값을 비교하지 않는다
+                따라서 주소값을 비교할때 문제가 발생할 수 있다
+            */
+            return(
+                <>
+                    <h3>계산이 오래걸리는 요상한 계산기</h3>
+                    <input type="number"
+                        value={hardNumber}
+                        onChange={e=>setHardNumber(parseInt(e.target.value))}
+                
+                    />
+                    <span>+10000 = {hardSum}</span>
+                    <h3>계산이 금방되는 정상적인 계산기</h3>
+                    <input type="number"
+                        value={easyNum}
+                        onChange={e=>setEasyNum(parseInt(e.target.value))}
+                    />
+                    <span>+1 = {easySum}</span>
+
+                </>
+    )
+}
+
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>)
+    </script>
+</body>
+</html>

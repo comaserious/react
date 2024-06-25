@@ -17,13 +17,17 @@
 
     <script type="text/babel">
 
-        const {useState} = React;
+        const {useState,useEffect} = React;
 
         const root = ReactDOM.createRoot(document.getElementById('root'))
 
         function Header(){
+            useEffect(()=>setInterval(setTime(new Date().toLocaleTimeString(),1000)),[time] )
+
+            const [time,setTime] =useState(new Date().toLocaleTimeString() );
+
             return(
-                <h1>오늘의 할일 !! {new Date().toLocaleDateString()}</h1>
+                <h1>오늘의 할일 !! {time}</h1>
             )
         }
 
