@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /* update 발생상황 : props 변화, setState() , 부모컴포넌트 변경*/
+
+        const{useState,useEffect,useCallback} = React;
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        function App(){
+            const[size,setSize]=useState(200);
+            const[isDark,setIsDark] =useState(false)
+
+            const genSquareStyle=useCallback(()=>{
+                return {backgroundColor : 'orange', width: `${size}px`, height : `${size}px`}
+            },[size])
+
+            const onChangeHandler=e=>{
+                console.log(e.target.value)
+                setSize(e.target.value)
+            }
+            return(
+                <div style={{backgroundColor:isDark?'black':'white'}}>
+                    <input type="range" onChange={onChangeHandler} min='100' max='300'/> <button onClick={()=>setIsDark(!isDark)}>{String(isDark)}</button>
+                    <Square genSquareStyle={genSquareStyle}/>
+                </div>
+            )
+        }
+
+        function Square({genSquareStyle}){
+
+            console.log(genSquareStyle)
+            console.log('부모컴포넌트 변경시 자식이 업데이트 된다')
+
+            /*
+                부모인 App 컴포넌트가 업데이트 되어 자식인 Square 컴포넌트도 리랜더링이
+                될때, 부모가 준 props 에 변화가 있을때와 없을때를 
+                자식 컴포넌트의 useEffect 를 통해 구분하여 적용할 수 있다.
+            */
+            const [style,setStyle]= useState({})
+
+            useEffect(()=>{
+                console.log('style 변경')
+                setStyle(genSquareStyle())},[genSquareStyle])
+
+            
+
+            return(
+                <div style={style}></div>
+            )
+        }
+
+        root.render(<App/>)
+    </script>
+</body>
+</html>

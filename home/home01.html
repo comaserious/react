@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const {useState} = React;
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        function Container(){
+            const[inputText,setInputText] =useState('');
+
+            const[menus,setMenus] = useState([])
+
+            const[nextId,setNextId] = useState(1)
+
+
+            const onClickHandler=()=>{
+
+                menus.reverse();
+
+                const changeMenu = menus.concat({
+                    id:nextId,
+                    name : inputText
+                })
+
+                changeMenu.reverse();
+
+                setMenus(changeMenu)
+                setNextId(nextId+1)
+                setInputText('')
+            }
+
+            return(
+                <>
+                    <input type="text" value={inputText} onChange={e=>setInputText(e.target.value)}/>
+                    <button onClick={onClickHandler}>메뉴 추가</button>
+                    <ItemBox menus={menus} setMenus={setMenus}/>
+                </>
+            )
+        }
+
+        function ItemBox({menus}){
+
+            
+
+            return(
+                <ul style={{listStyle:'none'}}>
+                    {menus.map(menu=>{
+                        return(
+                            <li key={menu.id}>
+                                {menu.name}
+                            </li>
+                        )
+                    })}
+                </ul>
+            )
+        }
+
+
+        root.render(<Container/>)
+    </script>
+</html>

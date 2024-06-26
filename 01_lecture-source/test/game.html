@@ -41,6 +41,7 @@
             const [nextId,setNextId] =useState(0);
             const [inputText,setInputText]=useState('')
             const [isRoll,setIsRoll] = useState(false)
+            const [range,setRange] =useState([]) 
 
             const onClickHandler=()=>{
                 const changeGame = games.concat({id: nextId,description : inputText, percent: 0})
@@ -51,52 +52,47 @@
             }
             return(
                 <>
-                    <RandomBox games={games} setGames={setGames} isRoll={isRoll} setIsRoll={setIsRoll}/>
+                    <RandomBox games={games} setGames={setGames} isRoll={isRoll} setIsRoll={setIsRoll} range={range} setRange={setRange}/>
                     <input type="text" value={inputText} onChange={e=>setInputText(e.target.value)}/> <button onClick={onClickHandler}>추가</button>
-                    <Rolling games={games} setGames={setGames} isRoll={isRoll}/>
+                    <Rolling games={games} setGames={setGames} isRoll={isRoll} range={range}/>
                 </>
             )
         }
 
-        function Rolling({games,setGames,isRoll}){
+        function Rolling({games,setGames,isRoll,range}){
+
+            // const[randomNum,setRandomNum] = useState(0);
 
             const makeGame=()=>{
 
-                const range =[];
-                let start = 0;
+                let result = null;
 
-                games.forEach(game=>{
-                    range.concat({start: start, end: start + game.percent, description: game.description})
-                })
-
-                console.log(range)
-
-                console.log('오나')
                 const number = Math.random()*100
 
                 console.log(number)
-                const result = null
-
+                
+                for(let i = 0 ; i< range.length ; i++){
+                    if(range[i].start<= number && range[i].end> number){
+                        result = range[i].description
+                        break;
+                    }
+                }
                 console.log('range',range)
-
-                range.forEach(r=>{
-
-
-                    if(number>=r.start && number< r.end) result = r.description
-                })
-
                 console.log(result)
 
+                
+                setRandomNum(number)
                 return result
             }
 
-            
+            useEffect(()=>setInterval(()=>makeGame(),1000))
+
             return(
                 <>
                     {isRoll && 
                         
                         <div style={{width: 300, height: 300}}>
-                            {()=>makeGame}
+                            {makeGame()}
                             <button>돌리기</button>
                         </div>
                         
@@ -112,7 +108,9 @@
             )
         }
 
-        function RandomBox({games,setGames,isRoll,setIsRoll}){
+        function RandomBox({games,setGames,isRoll,setIsRoll,range,setRange}){
+
+            
 
             const onChangeHandler=(e,id)=>{
                 const changeGame = games.map(game=>game.id===id? {...game,percent: parseInt(e.target.value)}:game)
@@ -125,7 +123,7 @@
                 setGames(changeGame)
             }
 
-            const rolling=()=>{
+            const rolling=()=>{ 
                 let amount = 0;
                 games.forEach(game=>{
                     amount+=game.percent
@@ -134,7 +132,23 @@
                 if(amount!=100){
                     alert('합계가 100% 가 아닙니다')
                 }else{
+                    console.log()
                     setIsRoll(true)
+                    let start = 0
+                    const newRange = games.reduce((acc,game)=>{
+                        console.log('game',game)
+                        const newEntry = {
+                            start: start,
+                            end : start + game.percent,
+                            description : game.description
+                        }
+                        start += game.percent
+                        return acc.concat(newEntry)
+                    },[]);
+
+                    setRange(newRange);
+
+                    console.log('newRange',newRange)
                 }
             }
 

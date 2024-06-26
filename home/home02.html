@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const {useState,useEffect} = React;
+
+
+        function NumberCount(){
+
+            const[number,setNumber]=useState(0);
+            const[isTurn,setIsTurn]=useState(true)
+
+            useEffect(()=>{
+                if(isTurn){
+                    setIsTurn(false)
+                }else{
+                    console.log('count 값이 바뀜')}
+                }
+                ,[number])
+
+            return(
+                <>
+                    <div>{number}</div>
+                    <button onClick={()=>setNumber(number+1)}> +1 </button>
+                </>
+            )
+        }
+
+        function TextInput(){
+
+            const[inputText,setInputText]=useState('')
+            const[isTurn,setIsTurn]=useState(true)
+
+            
+            
+            useEffect(()=>{
+                if(isTurn){
+                    setIsTurn(false)
+                }else{
+                    console.log('input 값이 바뀜')
+                }
+            },[inputText])
+            return(
+                <>  
+                    <input type="text" onChange={e=>setInputText(e.target.value)}/>
+                    {isTurn && <p>{inputText}</p>}
+                </>
+            )
+        }
+
+        function Container(){
+
+            useEffect(()=>console.log('랜더링 완료'),[])
+
+            return(
+                <>
+                    <NumberCount/>
+                    <hr/>
+                    <TextInput/>
+                </>
+            )
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<Container/>)
+    </script>
+</body>
+</html>
