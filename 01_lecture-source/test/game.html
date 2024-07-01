@@ -17,7 +17,7 @@
 
     <script type="text/babel">
 
-        const {useState,useEffect} = React;
+        const {useState,useEffect,useCallback} = React;
 
         function Container(){
             return(
@@ -61,7 +61,7 @@
 
         function Rolling({games,setGames,isRoll,range}){
 
-            // const[randomNum,setRandomNum] = useState(0);
+            const [pun,setPun] = useState('') 
 
             const makeGame=()=>{
 
@@ -81,19 +81,23 @@
                 console.log(result)
 
                 
-                setRandomNum(number)
-                return result
+                
+                setPun(result)
             }
 
-            useEffect(()=>setInterval(()=>makeGame(),1000))
+            useEffect(()=>{setInterval(()=>makeGame(),1050)},[isRoll])
+
+            
+            
 
             return(
                 <>
                     {isRoll && 
                         
                         <div style={{width: 300, height: 300}}>
-                            {makeGame()}
-                            <button>돌리기</button>
+                            {pun}
+                            <br/>
+                            <button>멈춤</button>
                         </div>
                         
 

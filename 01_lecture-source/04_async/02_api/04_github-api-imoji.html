@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <!-- axios 용 cdn -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        const {useState} = React;
+
+
+        function App(){
+            const [imgUrl,setImUrl] = useState('')
+
+            return(
+                <>
+                    <SearchBox setImUrl={setImUrl}/>
+                    <br/>
+                    <ImageBox imgUrl={imgUrl}/>
+                </>
+            )
+        }
+
+        function SearchBox({setImUrl}){
+
+            const [text, setText] = useState('')
+
+            const onClickHandler=()=>{
+
+                /* 버튼을 누르면 github api 로 부터 이모지 데이터 받아오기*/
+                // 1. fetch 사용하기
+                // fetch('https://api.github.com/emojis')
+                // .then(res=>res.json())
+                // .then(data=>{
+                //     console.log(data)
+                //     setImUrl(data[text])
+                // })
+
+                // 2. axios
+
+                axios.get('https://api.github.com/emojis')
+                .then(res=>{
+                    console.log(res)
+                    return res.data
+                })
+                .then(data=>{
+                    setImUrl(data[text])
+                })
+            }
+
+
+            return(
+                <>
+                    <input type="text" onChange={e=>setText(e.target.value)}/>
+                    <button onClick={onClickHandler}>검색</button>
+                </>
+                
+            )
+        }
+
+        function ImageBox({imgUrl}){
+
+            console.log('ddd',imgUrl)
+            return(
+                !!imgUrl? <img src={imgUrl}/> : <h1> 해당 이모지 없음</h1>
+            )
+        }
+
+        root.render(<App/>)
+    </script>
+</body>
+</html>
