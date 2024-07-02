@@ -1,0 +1,26 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 30vw 70vw;
+    grid-template-rows: 10vh 90vh;
+    grid-template-areas:
+    'a a'
+    'b c';
+}
+
+.nav{
+    grid-area: b;
+}
+
+.header{
+    background-color: black;
+    color: wheat;
+    text-align: center;
+    grid-area: a;
+}
+
+.contents{
+    grid-area: c;
+    border: 1px solid black;
+}
