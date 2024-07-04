@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <!-- axios 용 cdn -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- redux 라이브러리 -->
+    <script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+    <!-- react-redux 라이브러리 -->
+    <script src="https://unpkg.com/react-redux@8.0.4/dist/react-redux.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        /*
+            우리가 관리 할 state 가 복잡하거나 reducer 함수로 관리해야 할 성격이 다른 경우
+            combine reducer 를 이용할 수있다
+
+        */
+
+        const {Provider, useSelector , useDispatch} = ReactRedux;
+        const{createStore,combineReducers} = Redux;
+
+        /*관리해야할 초기값 세팅*/
+
+        // 버튼 숫자 관련
+        const countInitState = {
+            currentCount : 0
+        }
+        // 토글 관련
+        const activationInitState = {
+            isActivity : false
+        }
+        // input 관련
+        const userInitState ={
+            name : '',
+            email : '',
+            phone : ''
+        }
+        // Reducer function
+        const rootReducer = combineReducers({
+            counterReducer : (state = countInitState, action)=>{
+
+                console.log('카운터 리듀서 호출');
+
+                console.log(state)
+
+                const {type,payload} =action
+
+                switch(type){
+                    case 'increase' : return {
+                        currentCount : state.currentCount + payload.value
+                    }
+                    case 'decrease' : return {
+                        currentCount : state.currentCount - payload.value
+                    }
+                    default : return state
+                }
+            },
+            activationReducer : (state = activationInitState,action)=>{
+                console.log('activation reducer 호출됨')
+
+
+                const {type} = action
+
+                switch(type){
+                    case 'toggle' : return {
+                        isActivity : !state.isActivity
+                    }
+                    default : return state
+                }
+            },
+            userReducer : (state = userInitState ,action) =>{
+                console.log('userReducer 호출됨')
+
+                const {type, payload} = action
+
+                switch(type){
+                    case 'input' : return {
+                        /*
+                            주의점
+                            리듀서 함수를 작성할 시 주의해야 할 점은 state 가 객체일때 state 객체에 변화를 주기 위해서는
+                            매번 새로운 객체를 생성해서 반환해야한다
+                            리듀서 함수의 state 변경 여부는 주소값 일치 여부를 확이하는 것으로 성능을 개선 시켰기 때문에,
+                            객체 내부의 값만 변경해서는 state 변화가 없는 것처럼 감지하게 된다.
+
+                        */
+                        ...state, [payload.name]: payload.value
+                    }
+                    default : 
+                        return state;
+                }
+            }
+
+        });
+        
+        // Store
+        // 스토어는 생성시에 reducer 는 한개만 사용할 수 있다.
+        const store = createStore(rootReducer);
+
+        
+        function App(){
+
+            const dispatch = useDispatch();
+            
+            /*store 에 들어 있는 state 를 확인*/
+            console.log(useSelector(state=>state))
+            // state  에 생성한 reducer 인 activationReducer, counterReducer , userReducer 가 담겨 있음
+
+            /*combineReducers 를 이용하는 경우에는 useSelector 의 콜백함수를 통해서 reducer 별로 관리되는 state 를 반환*/
+            const {currentCount} = useSelector(state=> state.counterReducer)
+            const {isActivity} = useSelector(state=> state.activationReducer)
+            const {name, email,phone} = useSelector(state=> state.userReducer)
+            const increaseCount = () =>{
+                dispatch({
+                    type: 'increase',
+                    payload : {
+                        value : 1
+                    }
+                })
+            }
+
+            const decrementCount =()=>{
+                dispatch({
+                    type : 'decrease',
+                    payload : {
+                        value : 1
+                    }
+                })
+            }
+
+            const toggleActivation = () =>{
+                dispatch({
+                    type: 'toggle'
+                })
+            }
+
+            const onChangeHandler=e=>{
+                dispatch({
+                    type: 'input',
+                    payload:{
+                        name : e.target.name,
+                        value : e.target.value
+                    }
+                })
+            }
+
+            return(
+                <>
+                    <h1>currentCount : {currentCount}</h1>
+                    <button onClick={decrementCount}> -1 </button>
+                    <button onClick={increaseCount}> +1 </button>
+                    <br/>
+                    <h1>isActivity : {isActivity.toString()}</h1>
+                    <button onClick={toggleActivation}>토글 버튼</button>
+                    <br/>
+                    <h3>Input controller</h3>
+                    <label>name : </label>
+                    <input type="text" name='name' onChange={onChangeHandler}/>
+                    <br/>
+                    <label>email : </label>
+                    <input type="email" name='email' onChange ={onChangeHandler}/>
+                    <br/>
+                    <label>phone : </label>
+                    <input type="text" name='phone' onChange={onChangeHandler}/>
+                    <br/>
+                    <h3> name : {name}</h3>
+                    <h3> email : {email}</h3>
+                    <h3> phone : {phone}</h3>
+                </>
+            )
+        }
+
+        
+        
+
+        root.render(
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        )
+    </script>
+</body>
+</html>

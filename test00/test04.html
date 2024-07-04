@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <!-- axios 용 cdn -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+
+        const {useState,useRef,useEffect} = React;
+
+        function InputText(){
+
+            const [isClick , setIsClick] = useState(false)
+            let ref= useRef('');
+
+            useEffect(()=>{
+                isClick && console.log('랜더링 완료')
+            },[isClick])
+
+            return(
+                <>
+                    <input type="text" onChange={e=> {
+                        ref.current = e.target.value
+                    }}/><button onClick={()=>setIsClick(!isClick)}>전송</button>
+                    {isClick && <p>전송된 문자 : {ref.current}</p>}
+                </>
+            )
+        }
+
+        root.render(<InputText/>)
+    </script>
+</body>
+</html>

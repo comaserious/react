@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel 용 cdn -->
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- propTypes 용 cdn -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <!-- axios 용 cdn -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- redux 라이브러리 -->
+    <script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+    <!-- react-redux 라이브러리 -->
+    <script src="https://unpkg.com/react-redux@8.0.4/dist/react-redux.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        console.log(ReactRedux)
+        console.log(Redux)
+        const {useDispatch, useSelector, Provider} = ReactRedux;
+        const {createStore,combineReducers} =Redux;
+
+        // 초깃값 설정
+
+        const initCounter = {
+            currentCounter : 0
+        }
+
+        const initClick = {
+            isClick : false
+        }
+
+        const initUser = {
+            name : '',
+            email : '',
+            phone : ''
+        }
+
+        // reducer
+        const rootReducer = combineReducers({
+            countReducer : (state=initCounter, action)=>{
+                const {type , payload} =action;
+                switch(type){
+                    case 'INCREMENT' : return {
+                        currentCounter : state.currentCounter + payload.value
+                    }
+
+                    case 'DECREMENT' : return {
+                        currentCounter : state.currentCounter - payload.value
+                    }
+                    default : return state; 
+                }
+            },
+            toggleReducer : (state= initClick , {type})=>{
+                
+            }
+
+        })
+
+
+        // component
+
+        function App(){
+
+            const dispatch = useDispatch();
+
+            const increaseCount = ()=>{
+                dispatch({
+                    type : 'INCREMENT',
+                    payload : {
+                        value : 2
+                    }
+                })
+            }
+            const decreaseCount =()=>{
+                dispatch({
+                    type : 'DECREMENT',
+                    payload : {
+                        value : 2
+                    }
+                })
+            }
+
+            const {currentCounter} = useSelector(state=>state.countReducer)
+
+            return(
+                <>
+                    <h1>Count : {currentCounter}</h1>
+                    <button onClick={decreaseCount}> -2 </button>
+                    <button onClick={increaseCount}> +2 </button>
+                </>
+            )
+        }
+
+        //rendering
+        const store = createStore(rootReducer)
+
+        root.render(
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        )
+
+
+
+    </script>
+</body>
+</html>
